@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Safari Push Notification</title>
+  <link rel="manifest" href="manifest.json">
+</head>
+
+<body>
+  <button id="allow_push">Allow Push</button>
+  <script>
+    var p = document.getElementById("allow_push");
+    p.onclick = function requestPermission() {
+      console.log('Requesting permission for push notifications...');
+      if ('safari' in window && 'pushNotification' in window.safari) {
+        var permissionData = window.safari.pushNotification.permission('web.domain.notif');
+        console.log('Current permission status:', permissionData);
+        window.safari.pushNotification.requestPermission(
+          'https://localhost:3000/',
+          'web.domain.notif', {}, function(subscription) {
+            console.log('Subscription:', subscription);
+            if (subscription.permission === 'granted') {
+              console.log('Permission granted:', subscription);
+              // TODO: handle subscription information
+            } else if (subscription.permission === 'denied') {
+              console.log('Permission denied:', subscription);
+              // TODO: handle permission denied
+            }
+          });
+      } else {
+        console.log('Push notifications not supported.');
+        alert("Push notifications not supported.");
+      }
+    }
+  </script>
+</body>
+
+</html>
